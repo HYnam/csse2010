@@ -93,7 +93,31 @@ void move_player_paddle(int8_t player, int8_t direction) {
 	 * 4: Display the player at their new position.
 	 */	
 	// YOUR CODE HERE
-
+	int8_t player_x = PLAYER_X_COORDINATES[player];
+	int8_t player_y = player_y_coordinates[player];
+	
+	// Erase the old paddle
+	erase_player_paddle(player);
+	
+	// Calculate the new y-coordinate for the player y paddle 
+	int8_t new_player_y = player_y + direction;
+	// Calculate the new y-coordinate for the player x paddle
+	int8_t new_player_x = player_x + direction;
+	
+	// Check if the paddle will move off the display
+	if (new_player_y + PLAYER_HEIGHT <= BOARD_HEIGHT && new_player_y >= 0) {
+		// Update the player's y-coordinate
+		player_y_coordinates[player] = new_player_y;
+		
+		// Draw new paddle 
+		draw_player_paddle(player);
+	} else if (new_player_x + PLAYER_HEIGHT <= BOARD_HEIGHT && new_player_x >= 0) {
+		// Update the player's y-coordinate
+		player_y_coordinates[player] = new_player_x;
+	
+		// Draw new paddle
+		draw_player_paddle(player);
+	}
 }
 
 // Update ball position based on current x direction and y direction of ball

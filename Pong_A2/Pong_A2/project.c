@@ -140,10 +140,28 @@ void play_game(void) {
 		// in `buttons.c`.
 		btn = button_pushed();
 		
-		if (btn == BUTTON3_PUSHED) {
+		// Move Paddles with Buttons (Level 1: 8 marks)
+		// Move Paddles with Terminal Input (Level 1: 4 marks)
+		char serial_input = 1;
+		if (serial_input_available()) {
+			serial_input = fgetc(stdin);
+		}
+
+		if (serial_input == 'w' || serial_input == 'W' || btn == BUTTON3_PUSHED) {
 			// If button 3 is pushed, move player 1 one space up
 			// YOU WILL NEED TO IMPLEMENT THIS FUNCTION
 			move_player_paddle(PLAYER_1, UP);
+		} else if (serial_input == 's' || serial_input == 'S' || 
+			serial_input == 'd' || serial_input == 'D' || btn == BUTTON2_PUSHED) {
+			// If button 2 is pushed, move player 1 one space down
+			move_player_paddle(PLAYER_1, DOWN);
+		} else if (serial_input == 'o' || serial_input == 'O' || btn == BUTTON1_PUSHED) {
+			// If button 1 is pushed, mover player 2 one space up
+			move_player_paddle(PLAYER_2, UP);
+		} else if (serial_input == 'k' || serial_input == 'K' ||
+			serial_input == 'l' || serial_input == 'L' || btn == BUTTON0_PUSHED) {
+			// If button 0 is pushed, move player 2 one space down
+			move_player_paddle(PLAYER_2, DOWN);
 		}
 		
 		current_time = get_current_time();
