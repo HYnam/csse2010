@@ -64,13 +64,14 @@ void initialise_hardware(void) {
 }
 
 void start_screen(void) {
+	// Start Screen (Level 1: 4 marks)
 	// Clear terminal screen and output a message
 	clear_terminal();
 	show_cursor();
 	move_terminal_cursor(10,10);
 	printf_P(PSTR("PONG"));
 	move_terminal_cursor(10,12);
-	printf_P(PSTR("CSSE2010/7201 A2 by <YOUR NAME> - <YOUR STUDENT NUMBER>"));
+	printf_P(PSTR("CSSE2010/7201 A2 by NAM Hiu Yi - 46604563"));
 	
 	// Output the static start screen and wait for a push button 
 	// to be pushed or a serial input of 's'
