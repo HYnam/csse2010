@@ -93,7 +93,6 @@ void move_player_paddle(int8_t player, int8_t direction) {
 	 * 4: Display the player at their new position.
 	 */	
 	// YOUR CODE HERE
-	int8_t player_x = PLAYER_X_COORDINATES[player];
 	int8_t player_y = player_y_coordinates[player];
 	
 	// Erase the old paddle
@@ -101,23 +100,20 @@ void move_player_paddle(int8_t player, int8_t direction) {
 	
 	// Calculate the new y-coordinate for the player y paddle 
 	int8_t new_player_y = player_y + direction;
-	// Calculate the new y-coordinate for the player x paddle
-	int8_t new_player_x = player_x + direction;
 	
 	// Check if the paddle will move off the display
-	if (new_player_y + PLAYER_HEIGHT <= BOARD_HEIGHT && new_player_y >= 0) {
+	if (new_player_y >= 0 && new_player_y + PLAYER_HEIGHT <= BOARD_HEIGHT - 1) {
 		// Update the player's y-coordinate
 		player_y_coordinates[player] = new_player_y;
-		
-		// Draw new paddle 
-		draw_player_paddle(player);
-	} else if (new_player_x + PLAYER_HEIGHT <= BOARD_HEIGHT && new_player_x >= 0) {
-		// Update the player's y-coordinate
-		player_y_coordinates[player] = new_player_x;
-	
-		// Draw new paddle
-		draw_player_paddle(player);
+	} else if (new_player_y < 0) {
+		// Paddle reached the upper bound, set it to 0
+		player_y_coordinates[player] = 0;
+	} else {
+		// Paddle reached the lower bound, set it to the maximum valid position
+		player_y_coordinates[player] = BOARD_HEIGHT - PLAYER_HEIGHT;
 	}
+	// Draw the new paddle
+	draw_player_paddle(player);
 }
 
 // Update ball position based on current x direction and y direction of ball
@@ -126,6 +122,36 @@ void update_ball_position(void) {
 	// Determine new ball coordinates
 	int8_t new_ball_x = ball_x + ball_x_direction;
 	int8_t new_ball_y = ball_y + ball_y_direction;
+	
+	// Check for collision with top wall
+	if (new_ball_y <= 0) {
+		// Invert vertical direction
+		ball_y_direction = -ball_y_direction;
+		// Set ball position at the top wall
+		new_ball_y = 1;
+	}
+	
+	// Check for collision with bottom wall
+	if (new_ball_y >= BOARD_HEIGHT - 1) {
+		// Invert vertical direction
+		ball_y_direction = -ball_y_direction;
+		// Set ball position at the bottom wall
+		new_ball_y = BOARD_HEIGHT - 2;
+	}
+	
+	// Check for collision with left wall
+	if (new_ball_x < 0) {
+		// Reset ball position to (5, 4)
+		new_ball_x = 5;
+		new_ball_y = 4;
+	}
+	
+	// Check for collision with right wall 
+	if (new_ball_x >= BOARD_WIDTH) {
+		// Reset ball position to (5, 4)
+		new_ball_x = 5;
+		new_ball_y = 4;
+	}
 	
 	// Erase old ball
 	update_square_colour(ball_x, ball_y, EMPTY_SQUARE);
