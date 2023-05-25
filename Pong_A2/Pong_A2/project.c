@@ -32,6 +32,8 @@ void new_game(void);
 void play_game(void);
 void handle_game_over(void);
 
+#define ESCAPE_CHAR 27
+
 /////////////////////////////// main //////////////////////////////////
 int main(void) {
 	// Setup hardware and call backs. This will turn on 
@@ -129,6 +131,9 @@ void play_game(void) {
 	uint32_t last_ball_move_time, current_time;
 	uint8_t btn; // The button pushed
 	
+	char escape_sequence_char;
+	uint8_t chars_in_escape_sequence = 0;
+	
 	last_ball_move_time = get_current_time();
 	
 	// We play the game until it's over
@@ -140,13 +145,28 @@ void play_game(void) {
 		// in `buttons.c`.
 		btn = button_pushed();
 		
-		// Move Paddles with Buttons (Level 1: 8 marks)
-		// Move Paddles with Terminal Input (Level 1: 4 marks)
 		char serial_input = 1;
+		escape_sequence_char = -1;
+		
 		if (serial_input_available()) {
 			serial_input = fgetc(stdin);
+			if (chars_in_escape_sequence == 0 && serial_input == ESCAPE_CHAR) {
+				chars_in_escape_sequence ++;
+				serial_input = -1;
+				} else if (chars_in_escape_sequence == 1 && serial_input == '[') {
+				chars_in_escape_sequence ++;
+				serial_input = -1;
+				} else if (chars_in_escape_sequence == 2) {
+				escape_sequence_char = serial_input;
+				serial_input = -1;
+				chars_in_escape_sequence = 0;
+				} else {
+				chars_in_escape_sequence = 0;
+			}
 		}
 
+		// Move Paddles with Buttons (Level 1: 8 marks)
+		// Move Paddles with Terminal Input (Level 1: 4 marks)
 		if (serial_input == 'w' || serial_input == 'W' || btn == BUTTON3_PUSHED) {
 			// If button 3 is pushed, move player 1 one space up
 			// YOU WILL NEED TO IMPLEMENT THIS FUNCTION

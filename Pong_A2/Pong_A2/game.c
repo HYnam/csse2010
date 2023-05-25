@@ -124,7 +124,7 @@ void update_ball_position(void) {
 	int8_t new_ball_y = ball_y + ball_y_direction;
 	
 	// Check for collision with top wall
-	if (new_ball_y <= 0) {
+	if (new_ball_y < 0) {
 		// Invert vertical direction
 		ball_y_direction = -ball_y_direction;
 		// Set ball position at the top wall
@@ -132,7 +132,7 @@ void update_ball_position(void) {
 	}
 	
 	// Check for collision with bottom wall
-	if (new_ball_y >= BOARD_HEIGHT - 1) {
+	if (new_ball_y > BOARD_HEIGHT - 1) {
 		// Invert vertical direction
 		ball_y_direction = -ball_y_direction;
 		// Set ball position at the bottom wall
