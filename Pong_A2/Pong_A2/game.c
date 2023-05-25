@@ -153,6 +153,43 @@ void update_ball_position(void) {
 		new_ball_y = 4;
 	}
 	
+	// Check for collision with player paddles 
+	if (new_ball_x == PLAYER_1_X + 1 && ball_x_direction < 0) {
+		// Ball is approaching player 1 paddle from the right
+		if (new_ball_y >= player_y_coordinates[PLAYER_1] && new_ball_y < player_y_coordinates[PLAYER_1] + PLAYER_HEIGHT) {
+			// Ball collides with player 1 paddle
+			if (ball_y_direction < 0) {
+				ball_x_direction = -ball_x_direction;	// Ball is moving up, invert horizontal direction 			
+			} else if (ball_y_direction > 0) {
+				// Ball is moving down, determine if it should bounce or pass
+				int8_t paddle_collision_point = player_y_coordinates[PLAYER_1] + PLAYER_HEIGHT - 1;
+				if (new_ball_y > paddle_collision_point) {
+					// Ball passes below the paddle, no bounce
+				} else {
+					// Ball bounce off the paddle, invert horizontal direction 
+					ball_x_direction = -ball_x_direction;
+				}
+			}
+		}
+	} else if (new_ball_x == PLAYER_2_X - 1 && ball_x_direction > 0) {
+		// Ball is approaching player 2 paddle from the left
+		if (new_ball_y >= player_y_coordinates[PLAYER_2] && new_ball_y < player_y_coordinates[PLAYER_2] + PLAYER_HEIGHT) {
+			// Ball collides with player 2 paddle
+			if (ball_y_direction < 0) {
+				ball_x_direction = -ball_x_direction;	// Ball is moving up, invert horizontal direction
+			} else if (ball_y_direction > 0) {
+				// Ball is moving down, determine bounce or pass
+				int8_t paddle_collision_point = player_y_coordinates[PLAYER_2] + PLAYER_HEIGHT - 1;
+				if (new_ball_y > paddle_collision_point) {
+					// Ball passes below the paddle, no bounce
+				} else {
+					// Ball bounce off the paddle, invert horizontal direction 
+					ball_x_direction = -ball_x_direction;
+				}
+			}
+		}
+	}
+	
 	// Erase old ball
 	update_square_colour(ball_x, ball_y, EMPTY_SQUARE);
 	
